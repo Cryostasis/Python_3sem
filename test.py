@@ -1,36 +1,30 @@
+import re
+
 fi = open('input.txt', 'r')
 fo = open('output.txt', 'w')
 
-(L, R, E) = map(int, fi.read().split())
+S = fi.read()
+print(S)
+#leftR = r"^[\w\*\+]*(?=sin())"
+#sinR = r"(?<=\()[\w\*\+]*(?=\))"
+#rightR = r"(?<=[\)])[\w\*\+]*$"
 
-N = (3 + 2 * R + 2 * E - L) * L - 1
+findxR = r"[1-9x\*]*"
 
-ans = []
-for i in range(0, N):
-	ans.append(['.' * N])
+sinR = r"[0-9x\*]*sin\([\w\*\+]*\)"
+leftR = r"^[\w\*\+]*?(?=[0-9x\*]*sin\([\w\*\+]*\))"
+rightR = r"^[\w\*\+]*?(?=[0-9x\*]*\)[\w\*\+]*\(nis)"
+insR = r"(?<=\()[\w\*\+]*(?=\))"
 
-def setCh(x, y, ch):
-	ans[x][y] = ch if (ans[x][y] == '.') else 'x'
 
-def boom(l, r, e, x, y):
-	setCh(x, y, '*')
-	for i in range(0, r):
-		setCh(x, y + i, '-')
-		setCh(x, y - i, '-')
-		setCh(x + i, y, '|')
-		setCh(x - i, y, '|')
+left = list(re.search(leftR, S).group(0)[::-1])
+sin = list(re.search(sinR, S).group(0))
+right = list(re.search(rightR, S[::-1]).group(0))
+ins = list(re.search(sinR, S).group(0))
 
-	for i in range(0, r + e):
-		setCh(x + i, y + i, '\\')
-		setCh(x + i, y - i, '/')
-		setCh(x - i, y + i, '/')
-		setCh(x - i, y - i, '\\')
-	boom(l - 1, r - 1, e, x + r + e, y)
-	boom(l - 1, r - 1, e, x - r - e, y)
-	boom(l - 1, r - 1, e, x, y + r + e)
-	boom(l - 1, r - 1, e, x, y - r - e)
+print(left)
+print(sin)
+print(right)
 
-boom(L, R, E, int(N / 2) + 1, int(N / 2) + 1)
-
-for i in range(0, N):
-	print("".join(ans[i]))
+flg_out_x = 0
+flg_out_0 = 0
